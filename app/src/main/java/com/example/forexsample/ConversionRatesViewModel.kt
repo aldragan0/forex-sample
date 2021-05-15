@@ -15,15 +15,18 @@ import retrofit2.await
 class ConversionRatesViewModel : ViewModel() {
     private val _conversionRates = MutableLiveData(listOf<Conversion>())
     private val _loading = MutableLiveData(false)
+    private val _error = MutableLiveData(false)
 
     val conversionRates: LiveData<List<Conversion>> = _conversionRates
     val loading: LiveData<Boolean> = _loading
+    val error: LiveData<Boolean> = _error
 
     fun loadConversionRates(referenceCurrency: Currency) {
         viewModelScope.launch(Dispatchers.Default) {
             if (_conversionRates.value!!.any { it.base == referenceCurrency }) {
                 return@launch
             } else if (_loading.value == false) {
+                _error.postValue(false)
                 _loading.postValue(true)
                 return@launch
             }
@@ -31,13 +34,13 @@ class ConversionRatesViewModel : ViewModel() {
             runCatching {
                 Currency.values()
                     .filterNot { it == referenceCurrency }
-                    .subList(0, 1)
                     .map { fetchConversionRate(it, referenceCurrency) }
                     .fold(Conversion(referenceCurrency), ::Conversion)
             }.onSuccess {
                 _conversionRates.postValue(_conversionRates.value!! + it)
             }.onFailure {
                 Log.w("loadConversionRates", it)
+                _error.postValue(true)
             }
             _loading.postValue(false)
         }

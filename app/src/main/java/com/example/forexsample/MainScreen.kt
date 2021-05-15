@@ -1,6 +1,5 @@
 package com.example.forexsample
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -53,8 +52,7 @@ fun ConversionScreen(
 ) {
     val rates: List<Conversion> by conversionRatesViewModel.conversionRates.observeAsState(listOf())
     val loading: Boolean by conversionRatesViewModel.loading.observeAsState(false)
-
-    Log.i("conversionScreen", "rates=$rates, loading=$loading")
+    val error: Boolean by conversionRatesViewModel.error.observeAsState(false)
 
     if (selected == null) {
         Toast.makeText(LocalContext.current, "Invalid selected currency", Toast.LENGTH_SHORT)
@@ -63,11 +61,21 @@ fun ConversionScreen(
     }
     conversionRatesViewModel.loadConversionRates(selected)
 
-    if (loading) {
-        CircularProgressIndicator()
-    } else {
-        rates.firstOrNull { it.base == selected }
-            ?.also { ConversionList(it) }
+    when {
+        loading -> {
+            CircularProgressIndicator()
+        }
+        !loading -> {
+            rates.firstOrNull { it.base == selected }
+                ?.also { ConversionList(it) }
+        }
+        error -> {
+            Toast.makeText(
+                LocalContext.current,
+                "Failed to fetch conversion rate for $selected",
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 }
 

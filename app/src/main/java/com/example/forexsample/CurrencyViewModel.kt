@@ -39,5 +39,4 @@ class CurrencyViewModel : ViewModel() {
         CurrencyApi.handleRequest {
             CurrencyApi.service.getCurrencies().await()
         }
-
 }
