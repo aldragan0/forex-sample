@@ -12,10 +12,17 @@ data class Conversion(
     @SerializedName("rates")
     val rates: Map<Currency, Double>
 ) {
+    constructor(currency: Currency) : this(
+        amount = 1,
+        base = currency,
+        date = "",
+        rates = mapOf()
+    )
+
     constructor(initial: Conversion, updated: Conversion) : this(
-        initial.amount,
+        updated.amount,
         initial.base,
-        initial.date,
+        updated.date,
         initial.rates + Pair(updated.base, updated.rates.values.first())
     )
 }

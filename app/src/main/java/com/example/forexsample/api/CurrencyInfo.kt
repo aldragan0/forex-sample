@@ -2,9 +2,9 @@ package com.example.forexsample.api
 
 import java.io.Serializable
 
-data class CurrencyInfo(
+data class CurrencyInfo<T>(
     val currency: Currency,
-    val description: String
+    val value: T
 ) : Serializable {
-    constructor(entry: Map.Entry<Currency, String>) : this(entry.key, entry.value)
+    constructor(entry: Map.Entry<Currency, T>) : this(entry.key, entry.value)
 }
