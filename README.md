@@ -3,6 +3,7 @@
 ### Description
 This is a currency conversion Android application implemented using [Jetpack Compose](https://developer.android.com/jetpack/compose).
 To run the app you need to use the latest [Canary version of Android Studio](https://developer.android.com/studio/preview).
+
 The application shows:
 * Reusable components
 * MVVM architecture
@@ -15,7 +16,7 @@ The application supports the following:
 * Fetch all currencies
 * Get conversion rates for a given currency
 ### Architecture
-The application uses the MVVM architecture and is structured as follows:
+The application uses the MVVM architecture and is structured as follows (mermaid diagram):
 ```mermaid
  graph TD
       id1(MainScreen) -->id2(CurrencyViewModel)--> id3(CurrencyApi)
